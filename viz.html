@@ -1,0 +1,40 @@
+<div id="3dmolviewer_UNIQUEID"  style="position: relative; width: 500px; height: 300px">
+        <p id="3dmolwarning_UNIQUEID" style="background-color:#ffcccc;color:black">You appear to be running in JupyterLab (or JavaScript failed to load for some other reason).  You need to install the 3dmol extension: <br>
+        <tt>jupyter labextension install jupyterlab_3dmol</tt></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+      resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdn.jsdelivr.net/npm/3dmol@latest/build/3Dmol-min.min.js');
+}
+
+var viewer_UNIQUEID = null;
+var warn = document.getElementById("3dmolwarning_UNIQUEID");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+viewer_UNIQUEID = $3Dmol.createViewer($("#3dmolviewer_UNIQUEID"),{backgroundColor:"white"});
+viewer_UNIQUEID.zoomTo();
+	viewer_UNIQUEID.addModel("3\n\nH          6.63873        7.15449       -6.52766\nO          5.88936        6.54671       -6.52766\nH          5.13999        7.15449       -6.52766\n","xyz");
+	viewer_UNIQUEID.setStyle({"sphere": {"colorscheme": "Jmol", "scale": 0.3}, "stick": {"colorscheme": "Jmol", "radius": 0.0}});
+	viewer_UNIQUEID.zoomTo();
+	viewer_UNIQUEID.render();
+	viewer_UNIQUEID.js();
+viewer_UNIQUEID.render();
+});
+</script>
