@@ -26,7 +26,7 @@ menu_items={
 
 # Sidebar stuff
 st.sidebar.write('# About')
-st.sidebar.write('### Made By Manas Sharma')
+st.sidebar.write('### Made By [Manas Sharma](https://www.bragitoff.com/about/)')
 st.sidebar.write('### *Powered by*')
 st.sidebar.write('* [Py3Dmol]() for Visualization')
 st.sidebar.write('* [Open Babel](http://openbabel.org/) for Format Conversion')
@@ -71,7 +71,7 @@ input_geom_str = os.linesep.join([s for s in input_geom_str.splitlines() if s])
 ## OUTPUT ##
 col2.write('## OUTPUT')
 output_format = col2.selectbox('Select the output file format',
-     ( 'tmol', 'xyz', 'sdf', 'cif','cub','cube','fh','fhiaims','mcif','mmcif','mdl','mol','mol2','outmol','smi','pdb','smiles','txt','txyz','text','acesii'))
+     ( 'tmol', 'xyz', 'sdf', 'cif','cub','cube','fh','fhiaims','mcif','mmcif','mdl','mol','mol2','outmol','smi','pdb','smiles','txt','txyz','text'))
 
 
 # References:
