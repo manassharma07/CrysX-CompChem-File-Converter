@@ -84,6 +84,8 @@ output_format = col2.selectbox('Select the output file format',
 # http://www.biotech.fyicenter.com/1000088_List_of_File_Formats_Supported_by_Open_Babel.html
 # https://open-babel.readthedocs.io/en/latest/UseTheLibrary/PythonInstall.html
 # https://open-babel.readthedocs.io/en/latest/UseTheLibrary/Python_Pybel.html
+# https://open-babel.readthedocs.io/en/latest/UseTheLibrary/Python_PybelAPI.html#pybel.descs
+# https://open-babel.readthedocs.io/en/latest/UseTheLibrary/Python_PybelAPI.html#pybel.descs
 
 # obconversion = OBConversion()
 # obconversion.SetInAndOutFormats(input_format, output_format)  # Set input and output formats
@@ -102,7 +104,9 @@ col2.text_area(label='Converted geometry file in the format selected by you',val
 
 ### VISUALIZATION ####
 style = st.selectbox('Visualization style',['ball-stick','line','cross','stick','sphere','cartoon','clicksphere'])
-spin = st.checkbox('Spin', value = False)
+col1, col2 = st.columns(2)
+spin = col1.checkbox('Spin', value = False)
+showLabels = col2.checkbox('Show Labels', value = False)
 # style='stick'
 # style='cartoon'
 # style='sphere'
@@ -126,10 +130,20 @@ if style=='ball-stick': # my own custom style
                        'stick':{'colorscheme':'Jmol', 'radius':0.}})
 else:
     view.setStyle({style:{'colorscheme':'Jmol'}})
+# Label addition template
+# view.addLabel('Aromatic', {'position': {'x':-6.89, 'y':0.75, 'z':0.35}, 
+#             'backgroundColor': 'white', 'backgroundOpacity': 0.5,'fontSize':18,'fontColor':'black',
+#                 'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
+if showLabels:
+    for atom in mol:
+        view.addLabel(str(atom.idx), {'position': {'x':atom.coords[0], 'y':atom.coords[1], 'z':atom.coords[2]}, 
+            'backgroundColor': 'white', 'backgroundOpacity': 0.5,'fontSize':18,'fontColor':'black',
+                'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
 view.zoomTo()
 view.spin(spin)
 view.show()
 view.render()
+# view.png()
 t = view.js()
 f = open('viz.html', 'w')
 f.write(t.startjs)
@@ -138,5 +152,21 @@ f.close()
 
 HtmlFile = open("viz.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
-components.html(source_code, height = 500, width=900)
+components.html(source_code, height = 300, width=900)
 HtmlFile.close()
+st.write('## Properties of the given chemical system')
+st.write('### Weight ')
+st.write(str(mol.molwt))
+st.write('### Formula ')
+st.write(str(mol.formula))
+st.write('### Exact mass ')
+st.write(str(mol.exactmass))
+st.write('### Spin multiplicity')
+st.write(str(mol.spin))
+st.write('### Charge')
+st.write(str(mol.charge))
+# st.write('### Conformers')
+# st.write((mol.conformers))
+# st.write(mol.data)
+# for atom in mol:
+#     st.write(atom.coords[1])
