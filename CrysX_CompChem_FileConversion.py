@@ -17,7 +17,9 @@ except ModuleNotFoundError as e:
 import os
 from openbabel import pybel
 
-os.remove('viz.html')
+
+if os.path.exists('viz.html'):
+    os.remove('viz.html')
 
 # Set page config
 st.set_page_config(page_title='CrysX - CompChem File Converter', layout='wide', page_icon="🧊",
@@ -100,6 +102,7 @@ col2.text_area(label='Converted geometry file in the format selected by you',val
 
 ### VISUALIZATION ####
 style = st.selectbox('Visualization style',['ball-stick','line','cross','stick','sphere','cartoon','clicksphere'])
+spin = st.checkbox('Spin', value = False)
 # style='stick'
 # style='cartoon'
 # style='sphere'
@@ -124,6 +127,7 @@ if style=='ball-stick': # my own custom style
 else:
     view.setStyle({style:{'colorscheme':'Jmol'}})
 view.zoomTo()
+view.spin(spin)
 view.show()
 view.render()
 t = view.js()
@@ -135,4 +139,4 @@ f.close()
 HtmlFile = open("viz.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
 components.html(source_code, height = 500, width=900)
-
+HtmlFile.close()
