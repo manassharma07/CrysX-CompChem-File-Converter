@@ -1,3 +1,2 @@
 streamlit>= 0.79
 py3Dmol
-openbabel
