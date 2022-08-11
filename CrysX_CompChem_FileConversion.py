@@ -123,5 +123,5 @@ f.close()
 
 HtmlFile = open("viz.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
-components.html(source_code, height = 400, width=400)
+components.html(source_code, height = 500, width=900)
 
