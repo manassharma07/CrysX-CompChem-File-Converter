@@ -17,6 +17,8 @@ except ModuleNotFoundError as e:
 import os
 from openbabel import pybel
 
+os.remove('viz.html')
+
 # Set page config
 st.set_page_config(page_title='CrysX - CompChem File Converter', layout='wide', page_icon="🧊",
 menu_items={
