@@ -1,6 +1,6 @@
 channels:
   - conda-forge
 dependencies:
+  - streamlit>= 0.79
   - openbabel
   - py3Dmol
-  - streamlit>= 0.79
