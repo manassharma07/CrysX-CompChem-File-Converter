@@ -1,10 +1,20 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import py3Dmol
-# from openbabel import OBMol, OBConversion
+import subprocess
+import sys
+import time
+try:
+    # from openbabel import OBMol, OBConversion
+    import openbabel
+except ModuleNotFoundError as e:
+    subprocess.Popen([f'{sys.executable} -m pip install --global-option=build_ext --global-option="-I/usr/include/openbabel3" --global-option="-L/usr/lib/openbabel" openbabel'], shell=True)
+    # wait for subprocess to install package before running your actual code below
+    time.sleep(90)
+    
+import os
 from openbabel import pybel
 
-import os
 # Set page config
 st.set_page_config(page_title='CrysX - CompChem File Converter', layout='wide', page_icon="🧊",
 menu_items={
