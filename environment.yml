@@ -3,3 +3,4 @@ channels:
 dependencies:
   - openbabel
   - py3Dmol
+  - streamlit>= 0.79
