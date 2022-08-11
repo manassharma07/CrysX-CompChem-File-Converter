@@ -97,21 +97,30 @@ except Exception as e:
 col2.text_area(label='Converted geometry file in the format selected by you',value=output_geom_str, height=400)
 
 ### VISUALIZATION ####
-
-style='stick'
+style = st.selectbox('Visualization style',['ball-stick','line','cross','stick','sphere','cartoon','clicksphere'])
+# style='stick'
 # style='cartoon'
 # style='sphere'
 view = py3Dmol.view(width=500, height=300)
-xyz_for_visualization = ''
+structure_for_visualization = ''
 try:
     mol = pybel.readstring(input_format, input_geom_str)
     # mol.make3D()
-    xyz_for_visualization = mol.write('xyz')
+    if style=='cartoon':
+        structure_for_visualization = mol.write('pdb')
+    else:
+        structure_for_visualization = mol.write('xyz')
 except Exception as e:
     print('There was a problem with the conversion', e)
-view.addModel(xyz_for_visualization, 'xyz')
-view.setStyle({'sphere':{'colorscheme':'Jmol','scale':0.3},
-                   'stick':{'colorscheme':'Jmol', 'radius':0.}})
+if style=='cartoon':
+    view.addModel(structure_for_visualization, 'pdb')
+else:
+    view.addModel(structure_for_visualization, 'xyz')
+if style=='ball-stick': # my own custom style
+    view.setStyle({'sphere':{'colorscheme':'Jmol','scale':0.3},
+                       'stick':{'colorscheme':'Jmol', 'radius':0.}})
+else:
+    view.setStyle({style:{'colorscheme':'Jmol'}})
 view.zoomTo()
 view.show()
 view.render()
