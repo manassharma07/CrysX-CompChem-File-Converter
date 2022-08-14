@@ -4,6 +4,8 @@ import py3Dmol
 import subprocess
 import sys
 import time
+from io import StringIO
+
 try:
     # from openbabel import OBMol, OBConversion
     import openbabel
@@ -67,10 +69,23 @@ col1, col2 = st.columns(2)
 col1.write('## INPUT')
 input_format = col1.selectbox('Select the input file format',
      ( 'xyz', 'tmol', 'sdf', 'cif', 'poscar','cub','cube','fhiaims','mcif','mmcif','mdl', 'mol', 'mol2', 'outmol', 'pwscf', 'smi', 'pdb', 'smiles','txt','txyz','text'))
-input_geom_str = col1.text_area(label='Enter the contents of the source file here', value = placeholder_xyz_str, placeholder = 'Put your text here', height=400)
+input_text_area = col1.empty()
+input_geom_str = input_text_area.text_area(label='Enter the contents of the source file here', value = placeholder_xyz_str, placeholder = 'Put your text here', height=400, key = 'input_text_area')
 # Get rid of empty lines
 input_geom_str = os.linesep.join([s for s in input_geom_str.splitlines() if s])
+uploaded_file = col1.file_uploader("You can also choose a file on your system")
+if uploaded_file is not None:
+    # To read file as bytes:
+    bytes_data = uploaded_file.getvalue()
 
+    # To convert to a string based IO:
+    stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+
+    # To read file as string:
+    string_data = stringio.read()
+    placeholder_xyz_str = string_data
+    input_geom_str = input_geom_str = input_text_area.text_area(label='Enter the contents of the source file here', value = placeholder_xyz_str, placeholder = 'Put your text here', height=400)
+    
 
 ## OUTPUT ##
 col2.write('## OUTPUT')
@@ -101,6 +116,12 @@ except Exception as e:
     print('There was a problem with the conversion', e)
 
 col2.text_area(label='Converted geometry file in the format selected by you',value=output_geom_str, height=400)
+col2.download_button(
+     label="Download the converted file",
+     data=output_geom_str,
+     file_name='converted_output.'+output_format,
+     mime='text/csv',
+ )
 
 ### VISUALIZATION ####
 style = st.selectbox('Visualization style',['ball-stick','line','cross','stick','sphere','cartoon','clicksphere'])
@@ -141,6 +162,8 @@ if showLabels:
                 'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
 view.zoomTo()
 view.spin(spin)
+view.setClickable({'clickable':'true'});
+view.enableContextMenu({'contextMenuEnabled':'true'})
 view.show()
 view.render()
 # view.png()
