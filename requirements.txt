@@ -1,4 +1,4 @@
 streamlit
 py3Dmol
 ipython
-openbabel==3.0.1
+openbabel==2.4.1
