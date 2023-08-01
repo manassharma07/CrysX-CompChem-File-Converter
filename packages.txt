@@ -1,3 +1,3 @@
 swig
-openbabel
+openbabel=3.0.1
 libopenbabel-dev
