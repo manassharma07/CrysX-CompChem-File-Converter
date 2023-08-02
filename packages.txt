@@ -1,2 +1,2 @@
-openbabel=3.0.0+dfsg-3ubuntu3
+openbabel=3.0.0+dfsg-4
 libopenbabel-dev
