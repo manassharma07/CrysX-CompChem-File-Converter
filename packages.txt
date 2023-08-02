@@ -1,3 +1,0 @@
-#swig
-#python3-openbabel
-#libopenbabel-dev
