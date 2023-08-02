@@ -1,1 +1,2 @@
+openbabel=3.0.0
 libopenbabel-dev
