@@ -1,4 +1,0 @@
-#streamlit
-#py3Dmol
-#ipython
-#openbabel==2.4.1
