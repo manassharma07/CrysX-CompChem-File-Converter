@@ -1,6 +1,7 @@
 name: streamlit-conda-minimal
 channels:
   - conda-forge
+  - anaconda
 dependencies:
   - streamlit
   - openbabel
