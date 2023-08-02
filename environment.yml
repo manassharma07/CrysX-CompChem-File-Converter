@@ -1,3 +1,4 @@
+name: streamlit-conda-minimal
 channels:
   - conda-forge
 dependencies:
