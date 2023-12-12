@@ -175,7 +175,7 @@ f.close()
 
 HtmlFile = open("viz.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
-components.html(source_code, height = 300, width=900)
+components.html(source_code, height = 300, width=500)
 HtmlFile.close()
 st.write('## Properties of the given chemical system')
 st.write('### Weight ')
