@@ -1,6 +1,9 @@
+name: streamlit-conda-minimal
 channels:
   - conda-forge
+  - anaconda
 dependencies:
-  - streamlit>= 0.79
+  - streamlit
   - openbabel
   - py3Dmol
+  - ipython
