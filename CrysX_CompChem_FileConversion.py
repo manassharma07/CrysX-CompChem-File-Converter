@@ -214,11 +214,11 @@ col2.download_button(
 
 if selected_conversion_tool=='ASE':
     # Convert ASE Atoms to pymatgen Structure
-    if all(atoms.pbc):
+    if any(atoms.pbc):
         structure = AseAtomsAdaptor().get_structure(atoms)
     else:
         structure = AseAtomsAdaptor().get_molecule(atoms)
-    if all(atoms.pbc):
+    if any(atoms.pbc):
         visualize_structure(structure, 'viz1.html')
     else:
         visualize_molecule(structure, 'viz1.html')
