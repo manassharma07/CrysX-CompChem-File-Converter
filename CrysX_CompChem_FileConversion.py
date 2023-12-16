@@ -134,7 +134,10 @@ elif selected_conversion_tool=='ASE':
     with open('temp_file_input', 'w') as file:
         file.write(input_geom_str)
     atoms = read('temp_file_input', format=input_format)
-    st.write(atoms)
+    write('temp_file_output', atoms, format=output_format)
+    # Open the file in read mode and read the content
+    with open('temp_file_output', 'r') as file:
+        output_geom_str = file.read()
 
 col2.text_area(label='Converted geometry file in the format selected by you',value=output_geom_str, height=400)
 col2.download_button(
