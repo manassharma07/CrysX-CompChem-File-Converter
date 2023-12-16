@@ -7,3 +7,4 @@ dependencies:
   - openbabel
   - py3Dmol
   - ipython
+  - ase

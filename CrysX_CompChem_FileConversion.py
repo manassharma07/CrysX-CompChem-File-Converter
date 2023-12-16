@@ -61,7 +61,13 @@ H         -1.20448        2.15509        3.97373
 H          1.28330        2.15508        4.03386
 '''
 
+selected_conversion_tool = st.selectbox("Select a tool for conversions", ['Open Babel', 'ASE'])
 
+if selected_conversion_tool == 'Open Babel':
+    supported_input_formats =  ['xyz', 'tmol', 'sdf', 'cif', 'poscar','cub','cube','fhiaims','mcif','mmcif',
+                                'mdl', 'mol', 'mol2', 'outmol', 'pwscf', 'smi', 'pdb', 'smiles','txt','txyz','text']
+    supported_output_formats = ['tmol', 'xyz', 'sdf', 'cif','cub','cube','fh','fhiaims','mcif','mmcif','mdl','mol','mol2','outmol',
+                               'smi','pdb','smiles','txt','txyz','text']
 
 ### CONVERSION ###
 
@@ -69,11 +75,11 @@ H          1.28330        2.15508        4.03386
 col1, col2 = st.columns(2)
 col1.write('## INPUT')
 input_format = col1.selectbox('Select the input file format',
-     ( 'xyz', 'tmol', 'sdf', 'cif', 'poscar','cub','cube','fhiaims','mcif','mmcif','mdl', 'mol', 'mol2', 'outmol', 'pwscf', 'smi', 'pdb', 'smiles','txt','txyz','text'))
+    supported_input_formats)
 input_text_area = col1.empty()
 input_geom_str = input_text_area.text_area(label='Enter the contents of the source file here', value = placeholder_xyz_str, placeholder = 'Put your text here', height=400, key = 'input_text_area')
-# Get rid of empty lines
-input_geom_str = os.linesep.join([s for s in input_geom_str.splitlines() if s])
+# # Get rid of empty lines
+# input_geom_str = os.linesep.join([s for s in input_geom_str.splitlines() if s])
 uploaded_file = col1.file_uploader("You can also choose a file on your system")
 if uploaded_file is not None:
     # To read file as bytes:
@@ -91,7 +97,7 @@ if uploaded_file is not None:
 ## OUTPUT ##
 col2.write('## OUTPUT')
 output_format = col2.selectbox('Select the output file format',
-     ( 'tmol', 'xyz', 'sdf', 'cif','cub','cube','fh','fhiaims','mcif','mmcif','mdl','mol','mol2','outmol','smi','pdb','smiles','txt','txyz','text'))
+    supported_output_formats)
 
 
 # References:
@@ -109,12 +115,13 @@ output_format = col2.selectbox('Select the output file format',
 # obconversion.ReadString(obmol, input_geom_str)         # Read file (file is read into obmol object)
 # output_geom_str = obconversion.WriteString(obmol )   # Convert file to output format and save
 output_geom_str = 'None'
-try:
-    mol = pybel.readstring(input_format, input_geom_str)
-    # mol.make3D()
-    output_geom_str = mol.write(output_format)
-except Exception as e:
-    print('There was a problem with the conversion', e)
+if selected_conversion_tool=='Open Babel':
+    try:
+        mol = pybel.readstring(input_format, input_geom_str)
+        # mol.make3D()
+        output_geom_str = mol.write(output_format)
+    except Exception as e:
+        print('There was a problem with the conversion', e)
 
 col2.text_area(label='Converted geometry file in the format selected by you',value=output_geom_str, height=400)
 col2.download_button(

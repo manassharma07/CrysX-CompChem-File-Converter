@@ -2,3 +2,4 @@ streamlit
 py3Dmol
 ipython
 openbabel-wheel
+ase
