@@ -5,6 +5,8 @@ import subprocess
 import sys
 import time
 from io import StringIO
+from ase.io import read
+from ase.io import write
 
 try:
     # from openbabel import OBMol, OBConversion
@@ -68,6 +70,11 @@ if selected_conversion_tool == 'Open Babel':
                                 'mdl', 'mol', 'mol2', 'outmol', 'pwscf', 'smi', 'pdb', 'smiles','txt','txyz','text']
     supported_output_formats = ['tmol', 'xyz', 'sdf', 'cif','cub','cube','fh','fhiaims','mcif','mmcif','mdl','mol','mol2','outmol',
                                'smi','pdb','smiles','txt','txyz','text']
+elif selected_conversion_tool == 'ASE':
+    supported_input_formats =  ['xyz', 'turbomole', 'mol', 'cif', 'vasp','cube','fhiaims','extxyz','espresso-in',
+                                'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf']
+    supported_output_formats = ['xyz', 'turbomole', 'mol', 'cif', 'vasp','cub','cube','fhiaims','extxyz','espresso-out',
+                                'dmol-car', 'xsd', 'octopus-out', 'nwchem-out', 'onetep-out', 'xsf']
 
 ### CONVERSION ###
 
@@ -122,6 +129,12 @@ if selected_conversion_tool=='Open Babel':
         output_geom_str = mol.write(output_format)
     except Exception as e:
         print('There was a problem with the conversion', e)
+elif selected_conversion_tool=='ASE':
+    # Open the file in write mode and write the content
+    with open('temp_file_input', 'w') as file:
+        file.write(input_geom_str)
+    atoms = read('temp_file_input', format=input_format)
+    st.write(atoms)
 
 col2.text_area(label='Converted geometry file in the format selected by you',value=output_geom_str, height=400)
 col2.download_button(
