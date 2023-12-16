@@ -218,7 +218,7 @@ if selected_conversion_tool=='ASE':
         structure = AseAtomsAdaptor().get_structure(atoms)
     else:
         structure = AseAtomsAdaptor().get_molecule(atoms)
-    if atoms.pbc:
+    if all(atoms.pbc):
         visualize_structure(structure, 'viz1.html')
     else:
         visualize_molecule(structure, 'viz1.html')
