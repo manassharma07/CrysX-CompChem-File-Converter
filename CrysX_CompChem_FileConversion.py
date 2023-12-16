@@ -74,7 +74,7 @@ elif selected_conversion_tool == 'ASE':
     supported_input_formats =  ['xyz', 'turbomole', 'mol', 'cif', 'vasp','cube','extxyz','espresso-in',
                                 'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf']
     supported_output_formats = ['xyz', 'turbomole', 'cif', 'vasp','cub','cube','extxyz','espresso-in',
-                                'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf']
+                                'dmol-car', 'xsd', 'nwchem-in', 'xsf']
 
 ### CONVERSION ###
 
