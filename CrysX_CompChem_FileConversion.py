@@ -7,6 +7,8 @@ import time
 from io import StringIO
 from ase.io import read
 from ase.io import write
+from pymatgen.core import Structure
+from pymatgen.io.ase import AseAtomsAdaptor
 
 try:
     # from openbabel import OBMol, OBConversion
@@ -21,6 +23,68 @@ except ModuleNotFoundError as e:
     
 import os
 from openbabel import pybel
+
+# Function to visualize the structure using py3Dmol
+def visualize_structure(structure, html_file_name='viz.html'):
+    spin = st.checkbox('Spin', value=False, key='key' + html_file_name)
+    view = py3Dmol.view(width=500, height=400)
+    cif_for_visualization = structure.to(fmt="cif")
+    view.addModel(cif_for_visualization, 'cif')
+    # view.setStyle({'stick': {'radius': 0.2}})
+    view.setStyle({'sphere': {'colorscheme': 'Jmol', 'scale': 0.3},
+                   'stick': {'colorscheme': 'Jmol', 'radius': 0.2}})
+    view.addUnitCell()
+    view.zoomTo()
+    view.spin(spin)
+    view.setClickable({'clickable': 'true'})
+    view.enableContextMenu({'contextMenuEnabled': 'true'})
+    view.show()
+    view.render()
+    # view.png()
+    t = view.js()
+    f = open(html_file_name, 'w')
+    f.write(t.startjs)
+    f.write(t.endjs)
+    f.close()
+
+    HtmlFile = open(html_file_name, 'r', encoding='utf-8')
+    source_code = HtmlFile.read()
+    components.html(source_code, height=300, width=500)
+    HtmlFile.close()
+
+
+# Function to visualize the structure using py3Dmol
+def visualize_molecule(structure, html_file_name='viz.html'):
+    spin = st.checkbox('Spin', value=False, key='key' + html_file_name)
+    view = py3Dmol.view(width=500, height=400)
+    cif_for_visualization = structure.to(fmt="xyz")
+    view.addModel(cif_for_visualization, 'xyz')
+    # view.setStyle({'stick': {'radius': 0.2}})
+    view.setStyle({'sphere': {'colorscheme': 'Jmol', 'scale': 0.3},
+                   'stick': {'colorscheme': 'Jmol', 'radius': 0.2}})
+    view.zoomTo()
+    view.spin(spin)
+    view.setClickable({'clickable': 'true'})
+    view.enableContextMenu({'contextMenuEnabled': 'true'})
+    view.show()
+    view.render()
+    # view.png()
+    t = view.js()
+    f = open(html_file_name, 'w')
+    f.write(t.startjs)
+    f.write(t.endjs)
+    f.close()
+
+    HtmlFile = open(html_file_name, 'r', encoding='utf-8')
+    source_code = HtmlFile.read()
+    components.html(source_code, height=300, width=900)
+    HtmlFile.close()
+
+
+# Function to display structure information
+def display_structure_info(structure):
+    st.subheader("Structure Information")
+    st.write("Formula: ", structure.composition.reduced_formula)
 
 
 if os.path.exists('viz.html'):
@@ -37,8 +101,9 @@ menu_items={
 st.sidebar.write('# About')
 st.sidebar.write('### Made By [Manas Sharma](https://www.bragitoff.com/about/)')
 st.sidebar.write('### *Powered by*')
-st.sidebar.write('* [Py3Dmol]() for Visualization')
-st.sidebar.write('* [Open Babel](http://openbabel.org/) for Format Conversion')
+st.sidebar.write('* [Py3Dmol](https://github.com/avirshup/py3dmol) for Visualization')
+st.sidebar.write('* [Open Babel](http://openbabel.org/) and [ASE](https://wiki.fysik.dtu.dk/ase/) for Format Conversion')
+st.sidebar.write('[Pymatgen](https://pymatgen.org/) for representing the structure internally')
 st.sidebar.write('## Brought to you by [CrysX](https://www.bragitoff.com/crysx/)')
 st.sidebar.write('## Cite us:')
 st.sidebar.write('[Sharma, M. & Mishra, D. (2019). J. Appl. Cryst. 52, 1449-1454.](http://scripts.iucr.org/cgi-bin/paper?S1600576719013682)')
@@ -147,71 +212,84 @@ col2.download_button(
      mime='text/csv',
  )
 
-### VISUALIZATION ####
-style = st.selectbox('Visualization style',['ball-stick','line','cross','stick','sphere','cartoon','clicksphere'])
-col1, col2 = st.columns(2)
-spin = col1.checkbox('Spin', value = False)
-showLabels = col2.checkbox('Show Labels', value = False)
-# style='stick'
-# style='cartoon'
-# style='sphere'
-view = py3Dmol.view(width=500, height=300)
-structure_for_visualization = ''
-try:
-    mol = pybel.readstring(input_format, input_geom_str)
-    # mol.make3D()
-    if style=='cartoon':
-        structure_for_visualization = mol.write('pdb')
+if selected_conversion_tool=='ASE':
+    # Convert ASE Atoms to pymatgen Structure
+    if all(atoms.pbc):
+        structure = AseAtomsAdaptor().get_structure(atoms)
     else:
-        structure_for_visualization = mol.write('xyz')
-except Exception as e:
-    print('There was a problem with the conversion', e)
-if style=='cartoon':
-    view.addModel(structure_for_visualization, 'pdb')
-else:
-    view.addModel(structure_for_visualization, 'xyz')
-if style=='ball-stick': # my own custom style
-    view.setStyle({'sphere':{'colorscheme':'Jmol','scale':0.3},
-                       'stick':{'colorscheme':'Jmol', 'radius':0.}})
-else:
-    view.setStyle({style:{'colorscheme':'Jmol'}})
-# Label addition template
-# view.addLabel('Aromatic', {'position': {'x':-6.89, 'y':0.75, 'z':0.35}, 
-#             'backgroundColor': 'white', 'backgroundOpacity': 0.5,'fontSize':18,'fontColor':'black',
-#                 'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
-if showLabels:
-    for atom in mol:
-        view.addLabel(str(atom.idx), {'position': {'x':atom.coords[0], 'y':atom.coords[1], 'z':atom.coords[2]}, 
-            'backgroundColor': 'white', 'backgroundOpacity': 0.5,'fontSize':18,'fontColor':'black',
-                'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
-view.zoomTo()
-view.spin(spin)
-view.setClickable({'clickable':'true'});
-view.enableContextMenu({'contextMenuEnabled':'true'})
-view.show()
-view.render()
-# view.png()
-t = view.js()
-f = open('viz.html', 'w')
-f.write(t.startjs)
-f.write(t.endjs)
-f.close()
+        structure = AseAtomsAdaptor().get_molecule(atoms)
+    if atoms.pbc:
+        visualize_structure(structure, 'viz1.html')
+    else:
+        visualize_molecule(structure, 'viz1.html')
 
-HtmlFile = open("viz.html", 'r', encoding='utf-8')
-source_code = HtmlFile.read() 
-components.html(source_code, height = 300, width=500)
-HtmlFile.close()
-st.write('## Properties of the given chemical system')
-st.write('### Weight ')
-st.write(str(mol.molwt))
-st.write('### Formula ')
-st.write(str(mol.formula))
-st.write('### Exact mass ')
-st.write(str(mol.exactmass))
-st.write('### Spin multiplicity')
-st.write(str(mol.spin))
-st.write('### Charge')
-st.write(str(mol.charge))
+
+if selected_conversion_tool=='Open Babel':
+    ### VISUALIZATION ####
+    style = st.selectbox('Visualization style',['ball-stick','line','cross','stick','sphere','cartoon','clicksphere'])
+    col1, col2 = st.columns(2)
+    spin = col1.checkbox('Spin', value = False)
+    showLabels = col2.checkbox('Show Labels', value = False)
+    # style='stick'
+    # style='cartoon'
+    # style='sphere'
+    view = py3Dmol.view(width=500, height=300)
+    structure_for_visualization = ''
+    try:
+        mol = pybel.readstring(input_format, input_geom_str)
+        # mol.make3D()
+        if style=='cartoon':
+            structure_for_visualization = mol.write('pdb')
+        else:
+            structure_for_visualization = mol.write('xyz')
+    except Exception as e:
+        print('There was a problem with the conversion', e)
+    if style=='cartoon':
+        view.addModel(structure_for_visualization, 'pdb')
+    else:
+        view.addModel(structure_for_visualization, 'xyz')
+    if style=='ball-stick': # my own custom style
+        view.setStyle({'sphere':{'colorscheme':'Jmol','scale':0.3},
+                        'stick':{'colorscheme':'Jmol', 'radius':0.}})
+    else:
+        view.setStyle({style:{'colorscheme':'Jmol'}})
+    # Label addition template
+    # view.addLabel('Aromatic', {'position': {'x':-6.89, 'y':0.75, 'z':0.35}, 
+    #             'backgroundColor': 'white', 'backgroundOpacity': 0.5,'fontSize':18,'fontColor':'black',
+    #                 'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
+    if showLabels:
+        for atom in mol:
+            view.addLabel(str(atom.idx), {'position': {'x':atom.coords[0], 'y':atom.coords[1], 'z':atom.coords[2]}, 
+                'backgroundColor': 'white', 'backgroundOpacity': 0.5,'fontSize':18,'fontColor':'black',
+                    'fontOpacity':1,'borderThickness':0.0,'inFront':'true','showBackground':'false'})
+    view.zoomTo()
+    view.spin(spin)
+    view.setClickable({'clickable':'true'});
+    view.enableContextMenu({'contextMenuEnabled':'true'})
+    view.show()
+    view.render()
+    # view.png()
+    t = view.js()
+    f = open('viz.html', 'w')
+    f.write(t.startjs)
+    f.write(t.endjs)
+    f.close()
+
+    HtmlFile = open("viz.html", 'r', encoding='utf-8')
+    source_code = HtmlFile.read() 
+    components.html(source_code, height = 300, width=500)
+    HtmlFile.close()
+    st.write('## Properties of the given chemical system')
+    st.write('### Weight ')
+    st.write(str(mol.molwt))
+    st.write('### Formula ')
+    st.write(str(mol.formula))
+    st.write('### Exact mass ')
+    st.write(str(mol.exactmass))
+    st.write('### Spin multiplicity')
+    st.write(str(mol.spin))
+    st.write('### Charge')
+    st.write(str(mol.charge))
 # st.write('### Conformers')
 # st.write((mol.conformers))
 # st.write(mol.data)
