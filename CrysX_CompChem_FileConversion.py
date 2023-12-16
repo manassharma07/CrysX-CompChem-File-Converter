@@ -71,10 +71,10 @@ if selected_conversion_tool == 'Open Babel':
     supported_output_formats = ['tmol', 'xyz', 'sdf', 'cif','cub','cube','fh','fhiaims','mcif','mmcif','mdl','mol','mol2','outmol',
                                'smi','pdb','smiles','txt','txyz','text']
 elif selected_conversion_tool == 'ASE':
-    supported_input_formats =  ['xyz', 'turbomole', 'mol', 'cif', 'vasp','cube','fhiaims','extxyz','espresso-in',
+    supported_input_formats =  ['xyz', 'turbomole', 'mol', 'cif', 'vasp','cube','extxyz','espresso-in',
                                 'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf']
-    supported_output_formats = ['xyz', 'turbomole', 'cif', 'vasp','cub','cube','fhiaims','extxyz','espresso-out',
-                                'dmol-car', 'xsd', 'octopus-out', 'nwchem-out', 'onetep-out', 'xsf']
+    supported_output_formats = ['xyz', 'turbomole', 'cif', 'vasp','cub','cube',,'extxyz','espresso-in',
+                                'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf']
 
 ### CONVERSION ###
 
