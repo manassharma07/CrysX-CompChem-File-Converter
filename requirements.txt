@@ -4,3 +4,4 @@ ipython
 openbabel-wheel
 ase
 pymatgen
+pandas

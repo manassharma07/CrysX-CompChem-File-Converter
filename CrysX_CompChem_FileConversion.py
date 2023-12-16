@@ -9,6 +9,7 @@ from ase.io import read
 from ase.io import write
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+import pandas as pd
 
 try:
     # from openbabel import OBMol, OBConversion
