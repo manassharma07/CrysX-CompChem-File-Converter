@@ -167,7 +167,7 @@ H         -1.20448        2.15509        3.97373
 H          1.28330        2.15508        4.03386
 '''
 
-selected_conversion_tool = st.selectbox("Select a tool for conversions", ['Open Babel', 'ASE'])
+selected_conversion_tool = st.selectbox("Select a tool for conversions", ['ASE', 'Open Babel'])
 
 if selected_conversion_tool == 'Open Babel':
     supported_input_formats =  ['xyz', 'tmol', 'sdf', 'cif', 'poscar','cub','cube','fhiaims','mcif','mmcif',
