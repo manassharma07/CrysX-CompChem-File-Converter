@@ -4,5 +4,5 @@ py3Dmol
 ipython
 openbabel-wheel
 ase
-pymatgen
+pymatgen==2024.6.10
 pandas
