@@ -1,4 +1,5 @@
 streamlit
+numpy==1.26.4
 py3Dmol
 ipython
 openbabel-wheel
