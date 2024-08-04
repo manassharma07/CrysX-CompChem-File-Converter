@@ -176,9 +176,9 @@ if selected_conversion_tool == 'Open Babel':
                                'smi','pdb','smiles','txt','txyz','text']
 elif selected_conversion_tool == 'ASE':
     supported_input_formats =  ['xyz', 'turbomole', 'mol', 'cif', 'vasp','cube','extxyz','espresso-in',
-                                'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf']
+                                'dmol-car', 'xsd', 'octopus-in', 'nwchem-in', 'onetep-in', 'xsf', 'lammps-data']
     supported_output_formats = ['turbomole', 'xyz', 'cif', 'vasp','cube','extxyz','espresso-in',
-                                'dmol-car', 'xsd', 'nwchem-in', 'xsf']
+                                'dmol-car', 'xsd', 'nwchem-in', 'xsf', 'lammps-data']
 
 ### CONVERSION ###
 
