@@ -25,6 +25,32 @@ except ModuleNotFoundError as e:
 import os
 from openbabel import pybel
 
+# Define the function to generate pseudopotentials dynamically
+def generate_dummy_pseudopotentials(atoms):
+    """Generate dummy pseudopotentials based on the atomic species in the structure."""
+    pseudopotentials = {}
+    for species in set(atoms.get_chemical_symbols()):
+        pseudopotentials[species] = f"{species}.dummy.UPF"
+    return pseudopotentials
+
+# Define template input parameters
+template_input_data = {
+    'calculation': 'scf',
+    'restart_mode': 'from_scratch',
+    'tprnfor': True,
+    'etot_conv_thr': 1e-5,
+    'forc_conv_thr': 1e-4,
+    'ecutwfc': 60,
+    'ecutrho': 480,
+    'occupations': 'smearing',
+    'degauss': 0.01,
+    'conv_thr': 1e-8,
+    'mixing_beta': 0.35,
+    'diagonalization': 'david',
+    'startingwfc': 'random',
+}
+
+
 # Function to visualize the structure using py3Dmol
 def visualize_structure(structure, html_file_name='viz.html'):
     spin = st.checkbox('Spin', value=False, key='key' + html_file_name)
@@ -238,7 +264,25 @@ elif selected_conversion_tool=='ASE':
     with open('temp_file_input', 'w') as file:
         file.write(input_geom_str)
     atoms = read('temp_file_input', format=input_format)
-    write('temp_file_output', atoms, format=output_format)
+    # Handle 'espresso-in' format specifically
+    if output_format == 'espresso-in':
+        # Generate pseudopotentials dynamically
+        pseudopotentials = generate_dummy_pseudopotentials(atoms)
+        kpoints = [4, 4, 4]  # Example k-point grid; modify as needed
+        
+        # Write the Quantum ESPRESSO input file
+        write(
+            'temp_file_output',
+            atoms,
+            format='espresso-in',
+            input_data=template_input_data,
+            pseudopotentials=pseudopotentials,
+            kpts=kpoints,
+        )
+    else:
+        # Handle other formats
+        write('temp_file_output', atoms, format=output_format)
+
     # Open the file in read mode and read the content
     with open('temp_file_output', 'r') as file:
         output_geom_str = file.read()
